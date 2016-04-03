@@ -1,0 +1,178 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Jigsass-tools-color - v0.0.0</title><link rel="stylesheet" href="assets/css/main.css"><script type="text/javascript">WebFontConfig={google:{families:["Roboto:400,100,300,500:latin"]}},function(){var e=document.createElement("script");e.src="https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js",e.type="text/javascript",e.async="true";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}();</script><meta name="viewport" content="width=device-width"><meta content="IE=edge, chrome=1" http-equiv="X-UA-Compatible"><!-- Open Graph tags --><meta property="og:title" content="Jigsass-tools-color - SassDoc"><meta property="og:type" content="website"><meta property="og:description" content="<p>Helpers for using an managing color palettes</p>
+"><!-- Thanks to Sass-lang.com for the icons --><link href="assets/images/favicon.png" rel="shortcut icon"></head><body><aside class="sidebar" role="nav"><div class="sidebar__header"><img class="sidebar__logo" src="assets/images/favicon.png"></div><div class="sidebar__body"><button type="button" class="btn-toggle js-btn-toggle" data-alt="Open all">Close all</button><p class="sidebar__item sidebar__item--heading" data-slug="color"><a href="#color">color</a></p><div><p class="sidebar__item sidebar__item--sub-heading" data-slug="color-variable"><a href="#color-variable">variables</a></p><ul class="list-unstyled"><li class="sidebar__item sassdoc__item" data-name="jigsass-colors" data-type="variable"><a href="#variable-jigsass-colors">jigsass-colors</a></li><li class="sidebar__item sassdoc__item" data-name="jigsass-adjustment-steps" data-type="variable"><a href="#variable-jigsass-adjustment-steps">jigsass-adjustment-steps</a></li></ul><p class="sidebar__item sidebar__item--sub-heading" data-slug="color-function"><a href="#color-function">functions</a></p><ul class="list-unstyled"><li class="sidebar__item sassdoc__item" data-name="jigsass-color" data-type="function"><a href="#function-jigsass-color">jigsass-color</a></li><li class="sidebar__item sassdoc__item" data-name="jigsass-tint" data-type="function"><a href="#function-jigsass-tint">jigsass-tint</a></li><li class="sidebar__item sassdoc__item" data-name="tint" data-type="function"><a href="#function-tint">tint <span class="sidebar__annotation sidebar__annotation--alias">alias</span></a></li><li class="sidebar__item sassdoc__item" data-name="jigsass-shade" data-type="function"><a href="#function-jigsass-shade">jigsass-shade</a></li><li class="sidebar__item sassdoc__item" data-name="shade" data-type="function"><a href="#function-shade">shade <span class="sidebar__annotation sidebar__annotation--alias">alias</span></a></li><li class="sidebar__item sassdoc__item" data-name="_jigsass-get-adjustment-level" data-type="function"><a href="#function-_jigsass-get-adjustment-level">_jigsass-get-adjustment-level</a></li></ul><p class="sidebar__item sidebar__item--sub-heading" data-slug="color-mixin"><a href="#color-mixin">mixins</a></p><ul class="list-unstyled"><li class="sidebar__item sassdoc__item" data-name="jigsass-set-color" data-type="mixin"><a href="#mixin-jigsass-set-color">jigsass-set-color</a></li></ul></div></div></aside><article class="main" role="main"><header class="header" role="banner"><div class="container"><h1 class="header__title"><a href="https://txhawks.github.io/jigsass-tools-color/">Jigsass-tools-color - v0.0.0</a></h1><div class="sassdoc__searchbar searchbar"><label for="js-search-input" class="visually-hidden">Search</label><div class="searchbar__form" id="js-search"><input name="search" type="search" class="searchbar__field" autocomplete="off" autofocus id="js-search-input" placeholder="Search"><ul class="searchbar__suggestions" id="js-search-suggestions"></ul></div></div></div></header><section class="main__section"><div class="container"><h1 id="jigsass-tools-color">JigSass Tools Color</h1><p><a href="https://npmjs.org/package/jigsass-tools-color"><img src="https://badge.fury.io/js/jigsass-tools-color.svg" alt="NPM version"></a> <a href="https://travis-ci.org/TxHawks/jigsass-tools-color"><img src="https://travis-ci.org/TxHawks/jigsass-tools-color.svg?branch=master" alt="Build Status"></a> <a href="https://david-dm.org/TxHawks/jigsass-tools-color"><img src="https://david-dm.org/TxHawks/jigsass-tools-color.svg?theme=shields.io" alt="Dependency Status"></a></p><p>Define and access named colors in a central palette</p><h2 id="installation">Installation</h2><p>Using npm:</p><pre><code class="lang-sh">npm i -S jigsass-tools-color
+</code></pre><h2 id="usage">Usage</h2><pre><code class="lang-scss">@import &#39;path/to/jigsass-tools-color/scss/index&#39;;
+</code></pre><p>Start by defining a color palette in the <code>$jigsass-colors</code> map.</p><p>You may define adjustment on each color by specifing a color function (or functions) directly in the map:</p><pre><code class="lang-scss">$jigsass-colors: (
+  // Explicit colors
+  black: #000,
+  primary: #09a5d9,
+  secondary: #046380,
+  tertiary: #9f1626,
+  neutral: #2d2d2d,
+
+  // Adjustments on explicit colors
+  light-tertiary: #9f1626 complement,
+
+  // Aliases
+  text-link: secondary,
+
+  // Adjustments to existing colors
+  gutter-rule: secondary (tint: 3),
+
+  // Multiple adjustments
+  headline: primary (shade: 1) complement,
+///   )
+</code></pre><p>You can now access colors, using the same [syntax] used for defining them to begin with.</p><pre><code class="lang-scss">.foo {
+   bar: jigsass-color(black (tint: 20%)); // --&gt; #333
+}
+</code></pre><p>For consistency, you can define per-color-function adjustment steps (<a href="https://txhawks.github.io/jigsass-tools-color/#variable-jigsass-adjustment-steps">documentation</a>):</p><pre><code class="lang-scss">$jigsass-adjustment-steps: (
+  // Tint will be increamented by 10% at every step
+  tint: 10%,
+  // Lighten has predefined steps
+  lighten: 2% 14% 34% 45%,
+  // Used for all color function with no explicitly defined steps
+  default: 5%,
+);
+</code></pre><p>And then access them in the <code>jigsass-color</code> function and <code>$jigsass-colors</code> map by passing a unitless number to the color functions:</p><pre><code class="lang-scss">.bar {
+  // Tint `black` by two steps
+  baz: jigsass-color(black (tint: 2));  // --&gt; #333
+}
+</code></pre><p><strong>License:</strong> MIT</p></div></section><section class="main__section"><h1 class="main__heading" id="color"><div class="container">color</div></h1><section class="main__sub-section" id="color-variable"><h2 class="main__heading--secondary"><div class="container">variables</div></h2><section class="main__item container item" id="variable-jigsass-colors"><h3 class="item__heading"><a class="item__name" href="#variable-jigsass-colors">jigsass-colors</a></h3><div class="item__code-wrapper"><pre class="item__code language-scss"><code>$jigsass-colors: () !default;</code></pre></div><h3 class="item__sub-heading">Description</h3><div class="item__description"><p>Color palette definitions.</p></div><h3 class="item__sub-heading">Type</h3><p><code>Map</code></p><h3 class="item__sub-heading">Map structure</h3><table class="item__parameters"><thead><tr><th scope="col"><span class="visually-hidden">Map key</span>Name</th><th scope="col"><span class="visually-hidden">Map key</span>Description</th><th scope="col"><span class="visually-hidden">Map key</span>Type</th><th scope="col"><span class="visually-hidden">Map key</span>Value</th></tr></thead><tbody><tr class="item__parameter"><th scope="row" data-label="name"><code>color</code></th><td data-label="desc">&mdash;<span class="visually-hidden">none</span></td><td data-label="type"><code>List</code></td><td data-label="default">&mdash;<span class="visually-hidden">none</span></td></tr><tr class="item__parameter"><th scope="row" data-label="name"><code>color.value</code></th><td data-label="desc"><p>Can be either an explicit color value or a string referencing another color defined in the palette.</p></td><td data-label="type"><code>Color</code> or <code>String</code></td><td data-label="default">&mdash;<span class="visually-hidden">none</span></td></tr><tr class="item__parameter"><th scope="row" data-label="name"><code>color.adjustments</code></th><td data-label="desc"><p>A list of color functions to apply. Each item can either be a map with <code>function-name: args</code> pairs, or a string for color functions that do not take adjustment arguments (e.g., compliment).</p><p>Adjustment functions will be executed in the order they are defined, in the following format: <code>function-name(color.value, args...)</code>.</p><p>When a adjustment argument is a unitless number, It will resolve to the corresponding step in <code>$jigsass-adjustment-steps</code>.</p></td><td data-label="type"><code>List</code></td><td data-label="default">&mdash;<span class="visually-hidden">none</span></td></tr></tbody></table><h3 class="item__sub-heading">Example</h3><div class="item__example example"><pre class="example__code language-scss"><code>$jigsass-color: (
+  // Explicit colors
+  primary: #09a5d9,
+  secondary: #046380,
+  tertiary: #9f1626,
+  neutral: #2d2d2d,
+
+  // Reference adjustments
+  light-tertiary: #9f1626 (tint: 2),
+
+  // Refrences
+  text-link: secondary,
+
+  // Reference adjustments
+  gutter-rule: secondary (tint: 3),
+
+  // Multiple adjustments
+  headline: primary (shade: 1) complement,
+)</code></pre></div><h3 class="item__sub-heading">Used by</h3><ul class="list-unstyled"><li><span class="item__cross-type">[function]</span> <a href="#function-jigsass-color"><code>jigsass-color</code></a></li><li><span class="item__cross-type">[mixin]</span> <a href="#mixin-jigsass-set-color"><code>jigsass-set-color</code></a></li></ul><h3 class="item__sub-heading">See</h3><ul class="list-unstyled"><li><span class="item__cross-type">[variable]</span> <a href="#variable-jigsass-adjustment-steps"><code>jigsass-adjustment-steps</code></a></li></ul></section><section class="main__item container item" id="variable-jigsass-adjustment-steps"><h3 class="item__heading"><a class="item__name" href="#variable-jigsass-adjustment-steps">jigsass-adjustment-steps</a></h3><div class="item__code-wrapper"><pre class="item__code language-scss"><code>$jigsass-adjustment-steps: (
+  default: 5%
+) !default;</code></pre></div><h3 class="item__sub-heading">Description</h3><div class="item__description"><p>Predefined adjustment steps for color functions in the format of &#39;function-name: steps&#39;.</p><p>If the map has a <code>default</code> key, if will be used as the default for color functions which don&#39;t have explicitly defined steps</p><p>A key associated a <code>Number</code> value, for incremental steps, or with a list of numbers for explicitly defining steps (see example).</p></div><h3 class="item__sub-heading">Type</h3><p><code>Map</code></p><h3 class="item__sub-heading">Map structure</h3><table class="item__parameters"><thead><tr><th scope="col"><span class="visually-hidden">map key</span>Name</th><th scope="col"><span class="visually-hidden">map key</span>Description</th><th scope="col"><span class="visually-hidden">map key</span>Type</th><th scope="col"><span class="visually-hidden">map key</span>Value</th></tr></thead><tbody><tr class="item__parameter"><th scope="row" data-label="name"><code>default</code></th><td data-label="desc"><p>The default steps used for color functions with no explicitly defined steps.</p></td><td data-label="type"><code>Percentage</code> or <code>List</code></td><td data-label="default"><code>5%</code></td></tr></tbody></table><h3 class="item__sub-heading">Example</h3><div class="item__example example"><pre class="example__code language-scss"><code>$jigsass-adjustment-steps: (
+  // Incremental: adjustment increased by 5%
+  // at every step (i.e., step 1 = 5%, step 4 = 20%).
+  default: 5%,
+
+  // Explicit: step 1 = 25%, step 3 = 75%.
+  darken: 25% 50% 75%
+);</code></pre></div><h3 class="item__sub-heading">Used by</h3><ul class="list-unstyled"><li><span class="item__cross-type">[function]</span> <a href="#function-_jigsass-get-adjustment-level"><code>_jigsass-get-adjustment-level</code></a></li></ul></section></section><section class="main__sub-section" id="color-function"><h2 class="main__heading--secondary"><div class="container">functions</div></h2><section class="main__item container item" id="function-jigsass-color"><h3 class="item__heading"><a class="item__name" href="#function-jigsass-color">jigsass-color</a></h3><div class="item__code-wrapper"><pre class="item__code item__code--togglable language-scss" data-current-state="collapsed" data-expanded="@function jigsass-color($A) { 
+  // Check if `$color` is a named color in the color palette
+  $color: map-get($jigsass-colors, $color) or $color;
+
+  // Split color and adjustments
+  $adjustments: ();
+  @if (length($color) &gt; 1) {
+    @for $i from 2 through length($color) {
+      $adjustments: append($adjustments, nth($color, $i));
+    }
+  }
+
+  $color: nth($color, 1);
+
+  // Check again if `$color` is a named color in the color palette
+  $named-colors: ();
+  // Coerce all color names into strings, to prevent an infinite loop
+  // (#000 == black is true in Sass)
+  @each $color-name, $value in $jigsass-colors {
+    $named-colors: append($named-colors, quote($color-name));
+  }
+  $color: if(index($named-colors, quote($color)), jigsass-color($color), $color);
+
+  @if (length($adjustments) &gt; 0) {
+    // Apply adjustments
+    @each $adjustment in $adjustments {
+      @if (type-of($adjustment) == map) {
+        $fn: nth(nth($adjustment, 1), 1);
+        $values: _jigsass-get-adjustment-level($fn, nth(nth($adjustment, 1), 2));
+        $_args: join(($fn, $color), $values);
+
+        @if (function-exists($fn)) {
+          $color: call($_args...);
+        }
+        @else {
+          @error &#39;jigsass-color: Cannot use `#{$fn}` to adjust color. No such &#39; +
+            &#39;function exists.&#39;;
+        }
+      }
+
+      @else {
+
+        $color: call($adjustment, $color);
+      }
+    }
+  }
+
+  @return $color;
+ }" data-collapsed="@function jigsass-color($A) { ... }"><code>@function jigsass-color($A) { ... }</code></pre></div><h3 class="item__sub-heading">Description</h3><div class="item__description"><p>Get a color from the color palette defined in <code>$jigsass-color</code> using the format described in <a href="#variable-jigsass-colors"><em><code>$jigsass-colors</code></em></a>.</p></div><h3 class="item__sub-heading">Parameters</h3><table class="item__parameters"><thead><tr><th scope="col"><span class="visually-hidden">parameter</span>Name</th><th scope="col"><span class="visually-hidden">parameter</span>Description</th><th scope="col"><span class="visually-hidden">parameter</span>Type</th><th scope="col"><span class="visually-hidden">parameter</span>Default value</th></tr></thead><tbody><tr class="item__parameter"><th scope="row" data-label="name"><code>$A</code></th><td data-label="desc"><p>CSS color or a name of a color from the colors palette, with optional adjustments using the format described in <a href="#variable-jigsass-colors"><em><code>$jigsass-colors</code></em></a>.</p></td><td data-label="type"><code>Color</code> or <code>String</code> or <code>List</code></td><td data-label="default">&mdash;<span class="visually-hidden">none</span></td></tr></tbody></table><h3 class="item__sub-heading">Returns</h3><div class="item__description item__description--inline"><code>Color</code></div><h3 class="item__sub-heading">Throws</h3><ul class="list-unstyled"><li><p>jigsass-color: Cannot use <code>#{$fn}</code> to adjust color. No such</p></li></ul><h3 class="item__sub-heading">Requires</h3><ul class="list-unstyled"><li class="item__description item__description--inline"><span class="item__cross-type">[function]</span> <a href="#function-_jigsass-get-adjustment-level"><code>_jigsass-get-adjustment-level</code></a></li><li class="item__description item__description--inline"><span class="item__cross-type">[variable]</span> <a href="#variable-jigsass-colors"><code>jigsass-colors</code></a></li></ul><h3 class="item__sub-heading">Used by</h3><ul class="list-unstyled"><li><span class="item__cross-type">[function]</span> <a href="#function-jigsass-tint"><code>jigsass-tint</code></a></li><li><span class="item__cross-type">[function]</span> <a href="#function-jigsass-shade"><code>jigsass-shade</code></a></li></ul></section><section class="main__item container item" id="function-jigsass-tint"><h3 class="item__heading"><a class="item__name" href="#function-jigsass-tint">jigsass-tint</a> <span class="item__aliased">(aliased as <a href="#function-tint"><code>tint</code></a> )</span></h3><div class="item__code-wrapper"><pre class="item__code item__code--togglable language-scss" data-current-state="collapsed" data-expanded="@function jigsass-tint($color, $amount) { 
+  @if (not type-of($amount) == number) {
+    @error &#39;jigsass-tint: `$amount` must be a number in `%`s, but it is a `#{type-of($amount)}`.&#39;;
+  }
+  @if (not unit($amount) == &#39;%&#39;) {
+    @error &#39;jigsass-tint: `$amount` must be in `%`s, but it is in `#{unit($amount)}`.&#39;;
+  }
+
+  $color: jigsass-color($color);
+
+  @return mix(#fff, $color, $amount);
+ }" data-collapsed="@function jigsass-tint($color, $amount) { ... }"><code>@function jigsass-tint($color, $amount) { ... }</code></pre></div><h3 class="item__sub-heading">Description</h3><div class="item__description"><p>Mix a color with <code>white</code> by amount.</p></div><h3 class="item__sub-heading">Parameters</h3><table class="item__parameters"><thead><tr><th scope="col"><span class="visually-hidden">parameter</span>Name</th><th scope="col"><span class="visually-hidden">parameter</span>Description</th><th scope="col"><span class="visually-hidden">parameter</span>Type</th><th scope="col"><span class="visually-hidden">parameter</span>Default value</th></tr></thead><tbody><tr class="item__parameter"><th scope="row" data-label="name"><code>$color</code></th><td data-label="desc"><p>A list with the first item being either an explicit color or a name of a color from the <code>$jigsass-color</code> palette.<br>The following, optional, items are adjustments to apply on the color before tinting it, in the format described in <a href="#variable-jigsass-colors"><em><code>$jigsass-colors</code></em></a></p></td><td data-label="type"><code>Color</code> or <code>String</code> or <code>List</code></td><td data-label="default">&mdash;<span class="visually-hidden">none</span></td></tr><tr class="item__parameter"><th scope="row" data-label="name"><code>$amount</code></th><td data-label="desc"><p>The amount of <code>white</code> to add to <code>$color</code>.</p></td><td data-label="type"><code>Precentage</code></td><td data-label="default">&mdash;<span class="visually-hidden">none</span></td></tr></tbody></table><h3 class="item__sub-heading">Returns</h3><div class="item__description item__description--inline"><code>Color</code></div><h3 class="item__sub-heading">Throws</h3><ul class="list-unstyled"><li><p>jigsass-tint: <code>$amount</code> must be a number in <code>%</code>s, but it is a <code>#{type-of($amount)}</code>.</p></li><li><p>jigsass-tint: <code>$amount</code> must be in <code>%</code>s, but it is in <code>#{unit($amount)}</code>.</p></li></ul><h3 class="item__sub-heading">Requires</h3><ul class="list-unstyled"><li class="item__description item__description--inline"><span class="item__cross-type">[function]</span> <a href="#function-jigsass-color"><code>jigsass-color</code></a></li></ul><h3 class="item__sub-heading">Example</h3><div class="item__example example"><pre class="example__code language-scss"><code>$tinted: jigsass-tint(primary (saturate: 2), 20%);</code></pre></div><h3 class="item__sub-heading">Used by</h3><ul class="list-unstyled"><li><span class="item__cross-type">[function]</span> <a href="#function-tint"><code>tint</code></a></li></ul></section><section class="main__item container item item--alias" id="function-tint"><h3 class="item__heading"><a class="item__name" href="#function-tint">tint</a> <span class="item__alias">(alias for <a href="#function-jigsass-tint"><code>jigsass-tint</code></a>)</span></h3><div class="item__code-wrapper"><pre class="item__code item__code--togglable language-scss" data-current-state="collapsed" data-expanded="@function tint() { 
+    @return jigsass-tint($color, $amount);
+   }" data-collapsed="@function tint() { ... }"><code>@function tint() { ... }</code></pre></div><p>Refer to <a href="#function-jigsass-tint">jigsass-tint</a>.</p></section><section class="main__item container item" id="function-jigsass-shade"><h3 class="item__heading"><a class="item__name" href="#function-jigsass-shade">jigsass-shade</a> <span class="item__aliased">(aliased as <a href="#function-shade"><code>shade</code></a> )</span></h3><div class="item__code-wrapper"><pre class="item__code item__code--togglable language-scss" data-current-state="collapsed" data-expanded="@function jigsass-shade($color, $amount) { 
+  @if (not type-of($amount) == number) {
+    @error &#39;jigsass-shade: `$amount` must be a number in `%`s, but it is a `#{type-of($amount)}`.&#39;;
+  }
+  @if (not unit($amount) == &#39;%&#39;) {
+    @error &#39;jigsass-shade: `$amount` must be in `%`s, but it is in `#{unit($amount)}`.&#39;;
+  }
+
+  $color: jigsass-color($color);
+
+  @return mix(#000, $color, $amount);
+ }" data-collapsed="@function jigsass-shade($color, $amount) { ... }"><code>@function jigsass-shade($color, $amount) { ... }</code></pre></div><h3 class="item__sub-heading">Description</h3><div class="item__description"><p>Mix a color with <code>black</code> by amount.</p></div><h3 class="item__sub-heading">Parameters</h3><table class="item__parameters"><thead><tr><th scope="col"><span class="visually-hidden">parameter</span>Name</th><th scope="col"><span class="visually-hidden">parameter</span>Description</th><th scope="col"><span class="visually-hidden">parameter</span>Type</th><th scope="col"><span class="visually-hidden">parameter</span>Default value</th></tr></thead><tbody><tr class="item__parameter"><th scope="row" data-label="name"><code>$color</code></th><td data-label="desc"><p>A list with the first item being either an explicit color or a name of a color from the <code>$jigsass-color</code> palette.<br>The following, optional, items are adjustments to apply on the color before shading it, in the format described in <a href="#variable-jigsass-colors"><em><code>$jigsass-colors</code></em></a></p></td><td data-label="type"><code>Color</code> or <code>String</code> or <code>List</code></td><td data-label="default">&mdash;<span class="visually-hidden">none</span></td></tr><tr class="item__parameter"><th scope="row" data-label="name"><code>$amount</code></th><td data-label="desc"><p>The amount of <code>black</code> to add to <code>$color</code>.</p></td><td data-label="type"><code>Precentage</code></td><td data-label="default">&mdash;<span class="visually-hidden">none</span></td></tr></tbody></table><h3 class="item__sub-heading">Returns</h3><div class="item__description item__description--inline"><code>Color</code></div><h3 class="item__sub-heading">Throws</h3><ul class="list-unstyled"><li><p>jigsass-shade: <code>$amount</code> must be a number in <code>%</code>s, but it is a <code>#{type-of($amount)}</code>.</p></li><li><p>jigsass-shade: <code>$amount</code> must be in <code>%</code>s, but it is in <code>#{unit($amount)}</code>.</p></li></ul><h3 class="item__sub-heading">Requires</h3><ul class="list-unstyled"><li class="item__description item__description--inline"><span class="item__cross-type">[function]</span> <a href="#function-jigsass-color"><code>jigsass-color</code></a></li></ul><h3 class="item__sub-heading">Example</h3><div class="item__example example"><pre class="example__code language-scss"><code>$shaded: jigsass-shade(primary (desaturate: 2), 20%);</code></pre></div><h3 class="item__sub-heading">Used by</h3><ul class="list-unstyled"><li><span class="item__cross-type">[function]</span> <a href="#function-shade"><code>shade</code></a></li></ul></section><section class="main__item container item item--alias" id="function-shade"><h3 class="item__heading"><a class="item__name" href="#function-shade">shade</a> <span class="item__alias">(alias for <a href="#function-jigsass-shade"><code>jigsass-shade</code></a>)</span></h3><div class="item__code-wrapper"><pre class="item__code item__code--togglable language-scss" data-current-state="collapsed" data-expanded="@function shade() { 
+    @return jigsass-shade($color, $amount);
+   }" data-collapsed="@function shade() { ... }"><code>@function shade() { ... }</code></pre></div><p>Refer to <a href="#function-jigsass-shade">jigsass-shade</a>.</p></section><section class="main__item container item" id="function-_jigsass-get-adjustment-level"><h3 class="item__heading"><span class="item__access">[private]</span> <a class="item__name" href="#function-_jigsass-get-adjustment-level">_jigsass-get-adjustment-level</a></h3><div class="item__code-wrapper"><pre class="item__code item__code--togglable language-scss" data-current-state="collapsed" data-expanded="@function _jigsass-get-adjustment-level($function, $adjustments) { 
+  $steps: map-get($jigsass-adjustment-steps, $function) or
+    map-get($jigsass-adjustment-steps, default);
+  $ret: ();
+
+  @each $adjustment in $adjustments {
+    @if (type-of($adjustment) == number and unitless($adjustment)) {
+      @if (not $steps) {
+        @error &#39;_jigsass-get-adjustment-steps: No adjustment steps could be found &#39; +
+          &#39;for `#{$function}` function and no default steps are defines.&#39;;
+      }
+
+      @if (length($steps) &gt; 1) {
+        $adjustment: if(
+          $adjustment &gt; length($steps),
+          nth($steps, length($steps)),
+          nth($steps, $adjustment)
+        );
+      }
+
+      @else {
+        $adjustment: $adjustment * $steps;
+      }
+    }
+
+    $ret: append($ret, $adjustment);
+  }
+
+  @return $ret;
+ }" data-collapsed="@function _jigsass-get-adjustment-level($function, $adjustments) { ... }"><code>@function _jigsass-get-adjustment-level($function, $adjustments) { ... }</code></pre></div><h3 class="item__sub-heading">Description</h3><div class="item__description"><p>A helper to get color adjustment levels based on steps defined in <code>$jigsass-adjustment-steps</code></p></div><h3 class="item__sub-heading">Parameters</h3><table class="item__parameters"><thead><tr><th scope="col"><span class="visually-hidden">parameter</span>Name</th><th scope="col"><span class="visually-hidden">parameter</span>Description</th><th scope="col"><span class="visually-hidden">parameter</span>Type</th><th scope="col"><span class="visually-hidden">parameter</span>Default value</th></tr></thead><tbody><tr class="item__parameter"><th scope="row" data-label="name"><code>$function</code></th><td data-label="desc"><p>A color function to resolve adjustment steps for</p></td><td data-label="type"><code>String</code></td><td data-label="default">&mdash;<span class="visually-hidden">none</span></td></tr><tr class="item__parameter"><th scope="row" data-label="name"><code>$adjustments</code></th><td data-label="desc"><p>A unitless number for the number of steps to resolve, a percentage, or a list of those.</p></td><td data-label="type"><code>Number</code> or <code>List</code></td><td data-label="default">&mdash;<span class="visually-hidden">none</span></td></tr></tbody></table><h3 class="item__sub-heading">Returns</h3><div class="item__description item__description--inline"><code>Number</code> or <code>List</code> &mdash;<p>An adjustment level in percentage, or a list of them.</p></div><h3 class="item__sub-heading">Throws</h3><ul class="list-unstyled"><li><p>_jigsass-get-adjustment-steps: No adjustment steps could be found</p></li></ul><h3 class="item__sub-heading">Requires</h3><ul class="list-unstyled"><li class="item__description item__description--inline"><span class="item__cross-type">[variable]</span> <a href="#variable-jigsass-adjustment-steps"><code>jigsass-adjustment-steps</code></a></li></ul><h3 class="item__sub-heading">Used by</h3><ul class="list-unstyled"><li><span class="item__cross-type">[function]</span> <a href="#function-jigsass-color"><code>jigsass-color</code></a></li></ul></section></section><section class="main__sub-section" id="color-mixin"><h2 class="main__heading--secondary"><div class="container">mixins</div></h2><section class="main__item container item" id="mixin-jigsass-set-color"><h3 class="item__heading"><a class="item__name" href="#mixin-jigsass-set-color">jigsass-set-color</a></h3><div class="item__code-wrapper"><pre class="item__code item__code--togglable language-scss" data-current-state="collapsed" data-expanded="@mixin jigsass-set-color($name, $values) { 
+  $jigsass-colors: map-merge($jigsass-colors, ($name: $values)) !global;
+ }" data-collapsed="@mixin jigsass-set-color($name, $values) { ... }"><code>@mixin jigsass-set-color($name, $values) { ... }</code></pre></div><h3 class="item__sub-heading">Description</h3><div class="item__description"><p>Add or overwrite a color in the color palette</p></div><h3 class="item__sub-heading">Parameters</h3><table class="item__parameters"><thead><tr><th scope="col"><span class="visually-hidden">parameter</span>Name</th><th scope="col"><span class="visually-hidden">parameter</span>Description</th><th scope="col"><span class="visually-hidden">parameter</span>Type</th><th scope="col"><span class="visually-hidden">parameter</span>Default value</th></tr></thead><tbody><tr class="item__parameter"><th scope="row" data-label="name"><code>$name</code></th><td data-label="desc"><p>The name of the new color</p></td><td data-label="type"><code>String</code></td><td data-label="default">&mdash;<span class="visually-hidden">none</span></td></tr><tr class="item__parameter"><th scope="row" data-label="name"><code>$values</code></th><td data-label="desc"><p>color values in the format described in <a href="#variable-jigsass-colors"><em><code>$jigsass-colors</code></em></a>.</p></td><td data-label="type"><code>String</code> or <code>Color</code> or <code>List</code></td><td data-label="default">&mdash;<span class="visually-hidden">none</span></td></tr></tbody></table><h3 class="item__sub-heading">Requires</h3><ul class="list-unstyled"><li class="item__description item__description--inline"><span class="item__cross-type">[variable]</span> <a href="#variable-jigsass-colors"><code>jigsass-colors</code></a></li></ul><h3 class="item__sub-heading">Example</h3><div class="item__example example"><pre class="example__code language-scss"><code>// Explicit
+@include jigsass-set-color(quaternary, #f0f);
+
+// Reference an existing color
+@include jigsass-set-color(quaternary, primary);
+
+// Adjust an existing color
+@include jigsass-set-color(quaternary, primary compliment (tint: 1));</code></pre></div></section></section></section><footer class="footer" role="contentinfo"><div class="container"><div class="footer__project-info project-info"><!-- Name and URL --><a class="project-info__name" href="https://txhawks.github.io/jigsass-tools-color/">Jigsass-tools-color</a><!-- Version --> <span class="project-info__version">- v0.0.0</span><!-- License --> <span class="project-info__license">, under MIT</span></div><a class="footer__watermark" href="http://sassdoc.com"><img src="assets/images/logo_light_inline.svg" alt="SassDoc Logo"></a></div></footer></article><script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script><script>window.jQuery || document.write('<script src="assets/js/vendor/jquery.min.js"><\/script>')</script><script src="assets/js/main.min.js"></script></body></html>
