@@ -1,0 +1,317 @@
+// *************************************
+//
+// # jigsass-tools-color
+// -> Helpers for using an managing color palettes
+//
+// Author: TxHawks (tofu.hawks@gmail.com)
+// https://txhawks.github.io/jigsass-tools-color/
+//
+////
+/// @group Color
+////
+// *************************************
+
+@charset 'UTF-8';
+
+// -------------------------------------
+// Variables
+// -------------------------------------
+
+/// Color palette definitions.
+/// ---
+/// @prop {List} color
+/// @prop {Color | String} color.value
+///   Can be either an explicit color value or a string
+///   referencing another color defined in the palette.
+/// @prop {List} color.adjustments
+///   A list of color functions to apply. Each item can
+///   either be a map with `function-name: args` pairs,
+///   or a string for color functions that do not take
+///   adjustment arguments (e.g., compliment).
+///
+///   Adjustment functions will be executed in the
+///   order they are defined, in the following format:
+///   `function-name(color.value, args...)`.
+///
+///   When a adjustment argument is a unitless number,
+///   It will resolve to the corresponding step in
+///   `$jigsass-adjustment-steps`.
+/// ---
+/// @example scss
+///   $jigsass-color: (
+///     // Explicit colors
+///     primary: #09a5d9,
+///     secondary: #046380,
+///     tertiary: #9f1626,
+///     neutral: #2d2d2d,
+///
+///     // Reference adjustments
+///     light-tertiary: #9f1626 (tint: 2),
+///
+///     // Refrences
+///     text-link: secondary,
+///
+///     // Reference adjustments
+///     gutter-rule: secondary (tint: 3),
+///
+///     // Multiple adjustments
+///     headline: primary (shade: 1) complement,
+///   )
+/// ---
+/// @see {vriable} $jigsass-adjustment-steps
+/// ---
+/// @type Map
+/// ---
+$jigsass-colors: () !default;
+
+/// Predefined adjustment steps for color functions
+/// in the format of 'function-name: steps'.
+///
+/// If the map has a `default` key, if will be used as the default
+/// for color functions which don't have explicitly defined steps
+///
+/// A key associated a `Number` value, for incremental steps,
+/// or with a list of numbers for explicitly defining steps
+/// (see example).
+/// ---
+/// @prop {Percentage | List} default [5%]
+///   The default steps used for color functions with no
+///   explicitly defined steps.
+/// ---
+/// @example scss
+///   $jigsass-adjustment-steps: (
+///     // Incremental: adjustment increased by 5%
+///     // at every step (i.e., step 1 = 5%, step 4 = 20%).
+///     default: 5%,
+///
+///     // Explicit: step 1 = 25%, step 3 = 75%.
+///     darken: 25% 50% 75%
+///   );
+/// ---
+/// @type map
+/// ---
+$jigsass-adjustment-steps: (
+  default: 5%
+) !default;
+
+
+
+// -------------------------------------
+// Functions
+// -------------------------------------
+
+/// Get a color from the color palette defined in `$jigsass-color` using the
+/// format described in [_`$jigsass-colors`_](#variable-jigsass-colors).
+/// ---
+/// @param {Color | String | List}
+///   A CSS color or a name of a color from the colors palette, with
+///   optional adjustments using the format described in
+///   [_`$jigsass-colors`_](#variable-jigsass-colors).
+/// ---
+/// @return {Color}
+/// ---
+@function jigsass-color($color) {
+  // Check if `$color` is a named color in the color palette
+  $color: map-get($jigsass-colors, $color) or $color;
+
+  // Split color and adjustments
+  $adjustments: ();
+  @if (length($color) > 1) {
+    @for $i from 2 through length($color) {
+      $adjustments: append($adjustments, nth($color, $i));
+    }
+  }
+
+  $color: nth($color, 1);
+
+  // Check again if `$color` is a named color in the color palette
+  $named-colors: ();
+  // Coerce all color names into strings, to prevent an infinite loop
+  // (#000 == black is true in Sass)
+  @each $color-name, $value in $jigsass-colors {
+    $named-colors: append($named-colors, quote($color-name));
+  }
+  $color: if(index($named-colors, quote($color)), jigsass-color($color), $color);
+
+  @if (length($adjustments) > 0) {
+    // Apply adjustments
+    @each $adjustment in $adjustments {
+      @if (type-of($adjustment) == map) {
+        $fn: nth(nth($adjustment, 1), 1);
+        $values: _jigsass-get-adjustment-level($fn, nth(nth($adjustment, 1), 2));
+        $_args: join(($fn, $color), $values);
+
+        @if (function-exists($fn)) {
+          $color: call($_args...);
+        }
+        @else {
+          @error 'jigsass-color: Cannot use `#{$fn}` to adjust color. No such ' +
+            'function exists.';
+        }
+      }
+
+      @else {
+
+        $color: call($adjustment, $color);
+      }
+    }
+  }
+
+  @return $color;
+}
+
+
+/// Mix a color with `white` by amount.
+/// ---
+/// @param {Color | String | List} $color
+///   A list with the first item being either an explicit color
+///   or a name of a color from the `$jigsass-color` palette.<br />
+///   The following, optional, items are adjustments to apply on
+///   the color before tinting it, in the format described in
+///   [_`$jigsass-colors`_](#variable-jigsass-colors)
+/// @param {Precentage} $amount
+///   The amount of `white` to add to `$color`.
+/// ---
+/// @return {Color}
+/// ---
+/// @example scss
+///   $tinted: jigsass-tint(primary (saturate: 2), 20%);
+/// ---
+@function jigsass-tint($color, $amount) {
+  @if (not type-of($amount) == number) {
+    @error 'jigsass-tint: `$amount` must be a number in `%`s, but it is a `#{type-of($amount)}`.';
+  }
+  @if (not unit($amount) == '%') {
+    @error 'jigsass-tint: `$amount` must be in `%`s, but it is in `#{unit($amount)}`.';
+  }
+
+  $color: jigsass-color($color);
+
+  @return mix(#fff, $color, $amount);
+}
+
+@if (not function-exists(tint)) {
+  /// @alias jigsass-tint
+  /// ---
+  @function tint($color, $amount) {
+    @return jigsass-tint($color, $amount);
+  }
+}
+
+
+/// Mix a color with `black` by amount.
+/// ---
+/// @param {Color | String | List} $color
+///   A list with the first item being either an explicit color
+///   or a name of a color from the `$jigsass-color` palette.<br />
+///   The following, optional, items are adjustments to apply on
+///   the color before shading it, in the format described in
+///   [_`$jigsass-colors`_](#variable-jigsass-colors)
+/// @param {Precentage} $amount
+///   The amount of `black` to add to `$color`.
+/// ---
+/// @return {Color}
+/// ---
+/// @example scss
+///   $shaded: jigsass-shade(primary (desaturate: 2), 20%);
+/// ---
+@function jigsass-shade($color, $amount) {
+  @if (not type-of($amount) == number) {
+    @error 'jigsass-shade: `$amount` must be a number in `%`s, but it is a `#{type-of($amount)}`.';
+  }
+  @if (not unit($amount) == '%') {
+    @error 'jigsass-shade: `$amount` must be in `%`s, but it is in `#{unit($amount)}`.';
+  }
+
+  $color: jigsass-color($color);
+
+  @return mix(#000, $color, $amount);
+}
+
+@if (not function-exists(shade)) {
+  /// @alias jigsass-shade
+  /// ---
+  @function shade($color, $amount) {
+    @return jigsass-shade($color, $amount);
+  }
+}
+
+
+
+
+
+// -------------------------------------
+// Private functions
+// -------------------------------------
+
+/// A helper to get color adjustment levels based on
+/// steps defined in `$jigsass-adjustment-steps`
+/// ---
+/// @param {String} $function
+///   A color function to resolve adjustment steps for
+/// @param {Number | List} $adjustments
+///   A unitless number for the number of steps to resolve, a percentage, or a list of those.
+/// ---
+/// @return {Number | List}
+///   An adjustment level in percentage, or a list of them.
+/// ---
+@function _jigsass-get-adjustment-level($function, $adjustments) {
+  $steps: map-get($jigsass-adjustment-steps, $function) or
+    map-get($jigsass-adjustment-steps, default);
+  $ret: ();
+
+  @each $adjustment in $adjustments {
+    @if (type-of($adjustment) == number and unitless($adjustment)) {
+      @if (not $steps) {
+        @error '_jigsass-get-adjustment-steps: No adjustment steps could be found ' +
+          'for `#{$function}` function and no default steps are defines.';
+      }
+
+      @if (length($steps) > 1) {
+        $adjustment: if(
+          $adjustment > length($steps),
+          nth($steps, length($steps)),
+          nth($steps, $adjustment)
+        );
+      }
+
+      @else {
+        $adjustment: $adjustment * $steps;
+      }
+    }
+
+    $ret: append($ret, $adjustment);
+  }
+
+  @return $ret;
+}
+
+
+
+
+
+// -------------------------------------
+// Mixins
+// -------------------------------------
+
+/// Add or overwrite a color in the color palette
+/// ---
+/// @param {String} $name
+///   The name of the new color
+/// @param {String | Color | List} $values
+///   color values in the format described in
+///   [_`$jigsass-colors`_](#variable-jigsass-colors).
+/// ---
+/// @example scss
+///   // Explicit
+///   @include jigsass-set-color(quaternary, #f0f);
+///
+///   // Reference an existing color
+///   @include jigsass-set-color(quaternary, primary);
+///
+///   // Adjust an existing color
+///   @include jigsass-set-color(quaternary, primary compliment (tint: 1));
+/// ---
+@mixin jigsass-set-color($name, $values) {
+  $jigsass-colors: map-merge($jigsass-colors, ($name: $values)) !global;
+}
