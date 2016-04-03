@@ -1,5 +1,4 @@
 import browserSync from 'browser-sync';
-import del from 'del';
 
 import fs from 'fs';
 
