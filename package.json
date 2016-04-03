@@ -58,7 +58,7 @@
     "sassdoc-theme-jigsass": "^0.2.12",
     "stylelint": "^4.5.1"
   },
-  "description": "Helpers for using an managing color palettes",
+  "description": "Helpers for using and managing color palettes",
   "license": "MIT",
   "homepage": "https://txhawks.github.io/jigsass-tools-color/"
 }
