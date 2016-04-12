@@ -48,6 +48,7 @@ describe('jigsass-tools-color', () => {
           .equals('.test{content: 75%}');
       });
     });
+
     describe('Specific adjustment functions', () => {
       it('Return a value specific to the requested function', () => {
         sassaby.standaloneMixin('jig-test')

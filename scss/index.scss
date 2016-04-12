@@ -103,7 +103,7 @@ $jigsass-adjustment-steps: (
 /// Get a color from the color palette defined in `$jigsass-color` using the
 /// format described in [_`$jigsass-colors`_](#variable-jigsass-colors).
 /// ---
-/// @param {Color | String | List}
+/// @param {Color | String | List} $color
 ///   A CSS color or a name of a color from the colors palette, with
 ///   optional adjustments using the format described in
 ///   [_`$jigsass-colors`_](#variable-jigsass-colors).
