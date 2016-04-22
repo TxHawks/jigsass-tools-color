@@ -113,6 +113,7 @@ describe('jigsass-tools-color', () => {
         .equals('#c2c2c2');
     });
   });
+
   describe('jigsass-color [Function]', () => {
     const sassaby = new Sassaby(file, {
       variables: {
@@ -121,10 +122,10 @@ describe('jigsass-tools-color', () => {
           'secondary: #046380,' +
           'tertiary: #9f1626,' +
           'neutral: #2d2d2d,' +
-          'light-tertiary: #9f1626 (tint: 2),' +
+          'light-tertiary: #9f1626 (jigsass-tint: 2),' +
           'text-link: secondary,' +
-          'gutter-rule: secondary (tint: 3),' +
-          'headline: primary (shade: 1) complement,' +
+          'gutter-rule: secondary (jigsass-tint: 3),' +
+          'headline: primary (jigsass-shade: 1) complement,' +
         ')'
       }
     });
@@ -137,7 +138,7 @@ describe('jigsass-tools-color', () => {
 
     it('Applies on the fly adjustments', () => {
       sassaby.func('jigsass-color')
-        .calledWithArgs('tertiary (tint: 2)')
+        .calledWithArgs('tertiary (jigsass-tint: 2)')
         .equals('#a92d3c');
     });
 
@@ -186,10 +187,10 @@ describe('jigsass-tools-color', () => {
           'secondary: #046380,' +
           'tertiary: #9f1626,' +
           'neutral: #2d2d2d,' +
-          'light-tertiary: #9f1626 (tint: 2),' +
+          'light-tertiary: #9f1626 (jigsass-tint: 2),' +
           'text-link: secondary,' +
-          'gutter-rule: secondary (tint: 3),' +
-          'headline: primary (shade: 1) complement,' +
+          'gutter-rule: secondary (jigsass-tint: 3),' +
+          'headline: primary (jigsass-shade: 1) complement,' +
         ')'
       }
     });
@@ -206,10 +207,10 @@ describe('jigsass-tools-color', () => {
         'secondary: #046380,' +
         'tertiary: #9f1626,' +
         'neutral: #2d2d2d,' +
-        'light-tertiary: #9f1626 (tint: 2),' +
+        'light-tertiary: #9f1626 (jigsass-tint: 2),' +
         'text-link: secondary,' +
-        'gutter-rule: secondary (tint: 3),' +
-        'headline: primary (shade: 1) complement,' +
+        'gutter-rule: secondary (jigsass-tint: 3),' +
+        'headline: primary (jigsass-shade: 1) complement,' +
         'new: red)'
       );
     });
@@ -226,10 +227,10 @@ describe('jigsass-tools-color', () => {
         'secondary: #046380,' +
         'tertiary: #9f1626,' +
         'neutral: #2d2d2d,' +
-        'light-tertiary: #9f1626 (tint: 2),' +
+        'light-tertiary: #9f1626 (jigsass-tint: 2),' +
         'text-link: secondary,' +
-        'gutter-rule: secondary (tint: 3),' +
-        'headline: primary (shade: 1) complement)'
+        'gutter-rule: secondary (jigsass-tint: 3),' +
+        'headline: primary (jigsass-shade: 1) complement)'
       );
     });
   });
