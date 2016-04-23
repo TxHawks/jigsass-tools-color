@@ -142,72 +142,9 @@ $jigsass-adjustment-steps: (
         $_args: join(($fn, $color), $values);
 
         @if (function-exists($fn)) {
-          // Ugly hack to fix libsass 3.3.5 bug
+          // Hack to fix libsass 3.3.5 bug
           // https://github.com/sass/libsass/issues/2034
-          @if (length($_args) == 2) {
-            $color: call(nth($_args, 1), nth($_args, 2));
-          }
-          @else if (length($_args) == 3) {
-            $color: call(nth($_args, 1), nth($_args, 2), nth($_args, 3));
-          }
-          @else if (length($_args) == 4) {
-            $color: call(nth($_args, 1), nth($_args, 2), nth($_args, 3), nth($_args, 4));
-          }
-          @else if (length($_args) == 5) {
-            $color: call(
-              nth($_args, 1),
-              nth($_args, 2),
-              nth($_args, 3),
-              nth($_args, 4),
-              nth($_args, 5)
-            );
-          }
-          @else if (length($_args) == 6) {
-            $color: call(
-              nth($_args, 1),
-              nth($_args, 2),
-              nth($_args, 3),
-              nth($_args, 4),
-              nth($_args, 5),
-              nth($_args, 6)
-            );
-          }
-          @else if (length($_args) == 7) {
-            $color: call(
-              nth($_args, 1),
-              nth($_args, 2),
-              nth($_args, 3),
-              nth($_args, 4),
-              nth($_args, 5),
-              nth($_args, 6),
-              nth($_args, 7)
-            );
-          }
-          @else if (length($_args) == 8) {
-            $color: call(
-              nth($_args, 1),
-              nth($_args, 2),
-              nth($_args, 3),
-              nth($_args, 4),
-              nth($_args, 5),
-              nth($_args, 6),
-              nth($_args, 7),
-              nth($_args, 8)
-            );
-          }
-          @else if (length($_args) == 9) {
-            $color: call(
-              nth($_args, 1),
-              nth($_args, 2),
-              nth($_args, 3),
-              nth($_args, 4),
-              nth($_args, 5),
-              nth($_args, 6),
-              nth($_args, 7),
-              nth($_args, 8),
-              nth($_args, 9)
-            );
-          }
+          $color: call($fn, $color, $values...);
           // Go back to this when bug is fixed
           // $color: call($_args...);
         }
